@@ -1,6 +1,6 @@
-import { ChartData, ChartConfig, LineConfig, BarConfig } from './helpers/types';
+import { ChartData, ChartConfig, LineConfig, BarConfig } from './types/types';
 import baseConfig from './helpers/baseConfig';
-import { validateColor, generateColor, resize } from './helpers/utils';
+import { isValidColor, generateColor, resize } from './helpers/utils';
 import { COLORS } from './helpers/constants';
 
 export default class Graphique {
@@ -25,9 +25,11 @@ export default class Graphique {
     }
     // Clone the array
     const colors = [...COLORS];
-    data.dataset.forEach(dataItem => {
-      if (!validateColor(dataItem.color))
-        dataItem.color = colors.pop() || generateColor(dataItem.name);
+
+    data.datasets.forEach(dataItem => {
+      if (!isValidColor(dataItem.color)) {
+        dataItem.color = colors.pop() ?? generateColor(dataItem.name);
+      }
       dataItem.values = resize(dataItem.values, totalDataPoints);
     });
     return data;

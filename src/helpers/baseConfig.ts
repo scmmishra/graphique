@@ -1,4 +1,6 @@
-import { ChartConfig, FillOptions, DotOptions } from './types';
+/* istanbul ignore file */
+
+import { ChartConfig, FillOptions, DotOptions } from '../types/types';
 
 const baseConfig: ChartConfig = {
   showLegend: true,

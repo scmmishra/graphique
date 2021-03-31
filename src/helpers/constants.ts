@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 const COLORS = [
   '#EF4444',
   '#F59E0B',
