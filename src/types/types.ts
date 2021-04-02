@@ -8,16 +8,16 @@ export enum ChartTypes {
   LINE = 'line',
 }
 
-export type DataItem = {
-  values: Array<number>;
+export interface DataItem {
+  values: number[];
   name: string;
   color: string;
   type: ChartTypes;
 };
 
-export type ChartData = {
-  labels: Array<string>;
-  dataset: Array<DataItem>;
+export interface ChartData {
+  labels: string[];
+  datasets: DataItem[];
 };
 
 // Chart Config
@@ -34,18 +34,18 @@ export enum DotOptions {
   NO_DOT = 'noDot',
 }
 
-export type LineConfig = {
+export interface LineConfig {
   fill?: Maybe<FillOptions>;
   dot?: Maybe<DotOptions>;
   dotSize?: Maybe<number>;
   spline?: boolean;
 };
 
-export type BarConfig = {
-  spaceRatio?: Number;
+export interface BarConfig {
+  spaceRatio?: number;
 };
 
-export type ChartConfig = {
+export interface ChartConfig {
   showLegend: boolean;
   showTooltip: boolean;
   showXAxis: boolean;

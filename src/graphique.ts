@@ -20,8 +20,8 @@ export default class Graphique {
 
   validateData(data: ChartData): ChartData {
     const totalDataPoints = data.labels.length;
-    if (totalDataPoints == 0) {
-      throw 'No labels found';
+    if (totalDataPoints === 0) {
+      throw new Error('No labels found');
     }
     // Clone the array
     const colors = [...COLORS];
@@ -30,7 +30,7 @@ export default class Graphique {
       if (!isValidColor(dataItem.color)) {
         dataItem.color = colors.pop() ?? generateColor(dataItem.name);
       }
-      dataItem.values = resize(dataItem.values, totalDataPoints);
+      dataItem.values = resize(dataItem.values, totalDataPoints) as number[];
     });
     return data;
   }
