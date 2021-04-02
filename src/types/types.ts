@@ -13,12 +13,12 @@ export interface DataItem {
   name: string;
   color: string;
   type: ChartTypes;
-};
+}
 
 export interface ChartData {
   labels: string[];
   datasets: DataItem[];
-};
+}
 
 // Chart Config
 export enum FillOptions {
@@ -39,11 +39,11 @@ export interface LineConfig {
   dot?: Maybe<DotOptions>;
   dotSize?: Maybe<number>;
   spline?: boolean;
-};
+}
 
 export interface BarConfig {
   spaceRatio?: number;
-};
+}
 
 export interface ChartConfig {
   showLegend: boolean;
@@ -53,4 +53,4 @@ export interface ChartConfig {
   animate: boolean;
   lineConfig?: LineConfig;
   barConfig?: BarConfig;
-};
+}

@@ -9,27 +9,27 @@ import {
 
 describe('[[ Color Validation ]]', () => {
   it('Allows Web Safe colors', () => {
-    webSafeColors.forEach(color => {
+    webSafeColors.forEach((color) => {
       expect(isValidColor(color)).toBeTruthy();
     });
   });
   it('Allows HEX Colors', () => {
-    hexColors.forEach(color => {
+    hexColors.forEach((color) => {
       expect(isValidColor(color)).toBeTruthy();
     });
   });
   it('Allows RGBA Colors', () => {
-    rgbaColor.forEach(color => {
+    rgbaColor.forEach((color) => {
       expect(isValidColor(color)).toBeTruthy();
     });
   });
   it('Allows HSLA Colors', () => {
-    hslaColors.forEach(color => {
+    hslaColors.forEach((color) => {
       expect(isValidColor(color)).toBeTruthy();
     });
   });
   it('Returns False on Wrong Colors', () => {
-    wrongColors.forEach(color => {
+    wrongColors.forEach((color) => {
       expect(isValidColor(color)).toBeFalsy();
     });
   });
@@ -38,10 +38,8 @@ describe('[[ Color Validation ]]', () => {
 describe('[[ Color Generation ]]', () => {
   it('Always Generates Correct Colors', () => {
     Array.from({ length: 100 }, () =>
-      Math.random()
-        .toString(16)
-        .substr(2, 8)
-    ).forEach(num => {
+      Math.random().toString(16).substr(2, 8)
+    ).forEach((num) => {
       const color = generateColor(num);
       expect(isValidColor(color)).toBeTruthy();
     });
