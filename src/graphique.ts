@@ -27,7 +27,7 @@ export default class Graphique {
     // Clone the array
     const colors = [...COLORS];
 
-    data.datasets.forEach(dataItem => {
+    data.datasets.forEach((dataItem) => {
       if (!isValidColor(dataItem.color)) {
         dataItem.color = colors.pop() ?? generateColor(dataItem.name);
       }
@@ -36,7 +36,5 @@ export default class Graphique {
     return data;
   }
 
-  buildCanvas(): void {
-
-  }
+  buildCanvas(): void {}
 }
