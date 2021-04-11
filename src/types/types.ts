@@ -8,7 +8,7 @@ export enum ChartTypes {
   LINE = 'line',
 }
 
-export interface DataItem {
+export interface DataSetItem {
   values: number[];
   name: string;
   color: string;
@@ -17,7 +17,7 @@ export interface DataItem {
 
 export interface ChartData {
   labels: string[];
-  datasets: DataItem[];
+  datasets: DataSetItem[];
 };
 
 // Chart Config

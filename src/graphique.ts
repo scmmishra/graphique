@@ -1,6 +1,7 @@
 import { ChartData, ChartConfig, LineConfig, BarConfig } from './types/types';
 import baseConfig from './helpers/baseConfig';
-import { isValidColor, generateColor, resize } from './helpers/utils';
+import { resize } from './utils/data';
+import { isValidColor, generateColor } from './utils/color';
 import { COLORS } from './helpers/constants';
 
 export default class Graphique {
@@ -33,5 +34,9 @@ export default class Graphique {
       dataItem.values = resize(dataItem.values, totalDataPoints) as number[];
     });
     return data;
+  }
+
+  buildCanvas(): void {
+
   }
 }
