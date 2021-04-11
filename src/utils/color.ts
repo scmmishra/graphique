@@ -13,11 +13,6 @@ export function isValidColor(stringToTest: string): boolean {
   return image.style.color !== 'rgb(255, 255, 255)';
 }
 
-export function resize(arr: unknown[], newSize: number): unknown[] {
-  if (newSize > arr.length) return arr;
-  return [...arr].splice(0, newSize);
-}
-
 export function generateColor(candidate: string): string {
   let hash = 0;
   for (let i = 0; i < candidate.length; i++) {
