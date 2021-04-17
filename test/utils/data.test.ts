@@ -1,4 +1,4 @@
-import { resize, getNumberParts } from '../../src/utils/data';
+import { resize, getNumberParts, bucket } from '../../src/utils/data';
 
 describe('[[ Resize Array ]]', () => {
   it('Resizes To Smaller Length', () => {
@@ -50,5 +50,36 @@ describe('[[ Get Number Parts ]]', () => {
         Math.round(parts.sign * Math.pow(10, parts.exponent) * parts.mantissa)
       ).toStrictEqual(candidate);
     });
+  });
+});
+
+describe('[[ Bucket and Array ]]', () => {
+  it('Basic Bucketing', () => {
+    const pairs = [
+      {
+        input: [-550, 800],
+        output: [-6, -4, -2, 0, 2, 4, 6, 8],
+      },
+      { input: [111, 1560], output: [0, 0.5, 1, 1.5, 2] },
+      {
+        input: [-111, -1560],
+        output: [-16, -14, -12, -10, -8, -6, -4, -2, 0, 2],
+      },
+      { input: [0, 0], output: [0, 1, 2, 3, 4, 5] },
+      { input: [0.1, 0.009], output: [0, 0.25, 0.5, 0.75, 1] },
+      {
+        input: [-0.1, 0.009],
+        output: [-0.1, -0.075, -0.05, -0.025, -0, 0.025],
+      },
+      {
+        input: [-0.1, -0.009],
+        output: [-0.1, -0.075, -0.05, -0.025, -0],
+      },
+    ];
+
+    pairs.forEach(pair => {
+      expect(bucket(pair.input)).toEqual(pair.output);
+    });
+    // console.log(bucket([-0.1, -0.009]));
   });
 });
