@@ -3,81 +3,52 @@ export function resize(arr: unknown[], newSize: number): unknown[] {
   return [...arr].splice(0, newSize);
 }
 
-interface NumberParts {
-  sign: -1 | 1;
-  mantissa: number;
-  exponent: number;
+function roundTo(canidate: number, decimal: number): number {
+  return Number(canidate.toFixed(decimal));
 }
 
-export function getNumberParts(candidate: number): NumberParts {
-  const absolute = Math.abs(candidate);
-  const parts = (absolute.toExponential() + '').split('e');
+export function getNiceLabels(
+  min: number,
+  max: number,
+  ticks: number
+): number[] {
+  if (min === 0 && max === 0)
+    return Array.from({ length: ticks }, (_, index) => index + 1);
 
-  const sign = candidate >= 0 ? 1 : -1;
-  const mantissa = parseFloat(parts[0]);
-  // const exponent = parseInt(parts[1]);
-  const exponent = (() => {
-    const exp = parseInt(parts[1]);
-    return isNaN(exp) ? 0 : exp;
-  })();
+  const labels = [];
+  const range = getNiceNumber(max - min, false);
+  const tickSpacing = getNiceNumber(range / (ticks - 1), true);
+  const graphMin = Math.floor(min / tickSpacing) * tickSpacing;
+  const graphMax = Math.ceil(max / tickSpacing) * tickSpacing;
 
-  return { sign, mantissa, exponent };
+  // number of decimal digits to show
+  const decimals = Math.max(-Math.floor(Math.log10(tickSpacing)), 0);
+
+  for (
+    let step = graphMin;
+    step <= graphMax + tickSpacing / 2;
+    step = step + tickSpacing
+  ) {
+    labels.push(roundTo(step, decimals));
+  }
+
+  return labels;
 }
 
-function getNormalizedIntervals(max: number, min = 0): number[] {
-  let upperBound = Math.ceil(max);
-  let lowerBound = Math.floor(min);
-  let range = upperBound - lowerBound;
+export function getNiceNumber(canidate: number, round: boolean): number {
+  const exponent = Math.floor(Math.log10(canidate));
+  const multiplicationFactor = Math.pow(10, exponent);
+  const niceFraction = canidate / multiplicationFactor;
 
-  let noOfParts = range;
-  let partSize = 1;
-
-  // To avoid too many partitions
-  if (range > 5) {
-    if (range % 2 !== 0) {
-      upperBound++;
-      // Recalc range
-      range = upperBound - lowerBound;
-    }
-    noOfParts = range / 2;
-    partSize = 2;
+  if (round) {
+    if (niceFraction < 1.5) return multiplicationFactor;
+    else if (niceFraction < 3) return 2 * multiplicationFactor;
+    else if (niceFraction < 7) return 5 * multiplicationFactor;
+    else return 10 * multiplicationFactor;
+  } else {
+    if (niceFraction <= 1) return multiplicationFactor;
+    else if (niceFraction <= 2) return 2 * multiplicationFactor;
+    else if (niceFraction <= 5) return 5 * multiplicationFactor;
+    else return 10 * multiplicationFactor;
   }
-
-  // Special case: 1 and 2
-  if (range <= 2) {
-    noOfParts = 4;
-    partSize = range / noOfParts;
-  }
-
-  // Special case: 0
-  if (range === 0) {
-    noOfParts = 5;
-    partSize = 1;
-  }
-
-  let intervals = [];
-  for (var i = 0; i <= noOfParts; i++) {
-    intervals.push(lowerBound + partSize * i);
-  }
-  return intervals;
-}
-
-export function bucket(values: number[]): number[] {
-  const maxValue = Math.max(...values);
-  const minValue = Math.min(...values);
-
-  const maxValueParts = getNumberParts(maxValue);
-  const exponentFactor = Math.pow(10, maxValueParts.exponent);
-  const normalizedMin = minValue / exponentFactor;
-
-  console.log(maxValueParts, exponentFactor, normalizedMin);
-
-  const intervals = getNormalizedIntervals(
-    maxValueParts.mantissa,
-    normalizedMin > 0 ? 0 : normalizedMin
-  );
-
-  return intervals.map(val => {
-    return val * exponentFactor;
-  });
 }

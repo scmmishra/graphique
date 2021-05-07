@@ -1,4 +1,5 @@
-import { resize, getNumberParts, bucket } from '../../src/utils/data';
+import { resize, getNiceLabels, getNiceNumber } from '../../src/utils/data';
+import pairs from '../data/labelPairs';
 
 describe('[[ Resize Array ]]', () => {
   it('Resizes To Smaller Length', () => {
@@ -20,66 +21,65 @@ describe('[[ Resize Array ]]', () => {
   });
 });
 
-describe('[[ Get Number Parts ]]', () => {
-  it('Gets correct values for standard values', () => {
-    const numbers = [1, -1, 1.5, -1.5, 1e100, -1e100, 1e-100, -1e-100];
-    numbers.forEach(candidate => {
-      const parts = getNumberParts(candidate);
-      expect(
-        parts.sign * Math.pow(10, parts.exponent) * parts.mantissa
-      ).toStrictEqual(candidate);
+describe('[[ Nice Number ]]', () => {
+  it('Generates for Control Set', () => {
+    const numberPairs = [
+      { num: 1, rounedVal: 1, val: 1 },
+      { num: 2, rounedVal: 2, val: 2 },
+      { num: 3, rounedVal: 5, val: 5 },
+      { num: 4, rounedVal: 5, val: 5 },
+      { num: 5, rounedVal: 5, val: 5 },
+      { num: 6, rounedVal: 5, val: 10 },
+      { num: 7, rounedVal: 10, val: 10 },
+      { num: 8, rounedVal: 10, val: 10 },
+      { num: 9, rounedVal: 10, val: 10 },
+      { num: 10, rounedVal: 10, val: 10 },
+    ];
+    numberPairs.forEach(pair => {
+      expect(getNiceNumber(pair.num, false)).toEqual(pair.val);
+      expect(getNiceNumber(pair.num, true)).toEqual(pair.rounedVal);
     });
   });
-  it('Gets correct values for 0, NaN and Infinty', () => {
-    const numbers = [0, NaN, Infinity, -Infinity];
-    numbers.forEach(candidate => {
-      const parts = getNumberParts(candidate);
-      expect(
-        parts.sign * Math.pow(10, parts.exponent) * parts.mantissa
-      ).toStrictEqual(candidate);
-    });
-  });
-  it('Gets correct values for random array', () => {
-    const numbers = Array.from({ length: 100 }, () =>
-      Math.floor(Math.random() * 1000)
-    );
+  it('Generates Valid Labels', () => {
+    const valuePairs = Array.from({ length: 100 }, () => Math.random() * 100);
+    [true, false].forEach(round => {
+      valuePairs.forEach(value => {
+        const exponent = Math.floor(Math.log10(value));
+        const niceNumber = getNiceNumber(value, round) / Math.pow(10, exponent);
 
-    numbers.forEach(candidate => {
-      const parts = getNumberParts(candidate);
-      expect(
-        Math.round(parts.sign * Math.pow(10, parts.exponent) * parts.mantissa)
-      ).toStrictEqual(candidate);
+        expect(niceNumber).toBeGreaterThanOrEqual(0);
+        expect(niceNumber).toBeLessThanOrEqual(10);
+        expect([0, 1, 2, 5, 10]).toContain(niceNumber);
+      });
     });
   });
 });
 
-describe('[[ Bucket and Array ]]', () => {
-  it('Basic Bucketing', () => {
-    const pairs = [
-      {
-        input: [-550, 800],
-        output: [-6, -4, -2, 0, 2, 4, 6, 8],
-      },
-      { input: [111, 1560], output: [0, 0.5, 1, 1.5, 2] },
-      {
-        input: [-111, -1560],
-        output: [-16, -14, -12, -10, -8, -6, -4, -2, 0, 2],
-      },
-      { input: [0, 0], output: [0, 1, 2, 3, 4, 5] },
-      { input: [0.1, 0.009], output: [0, 0.25, 0.5, 0.75, 1] },
-      {
-        input: [-0.1, 0.009],
-        output: [-0.1, -0.075, -0.05, -0.025, -0, 0.025],
-      },
-      {
-        input: [-0.1, -0.009],
-        output: [-0.1, -0.075, -0.05, -0.025, -0],
-      },
-    ];
-
+describe('[[ Nice Labels ]]', () => {
+  it('Generates for Control Set', () => {
     pairs.forEach(pair => {
-      expect(bucket(pair.input)).toEqual(pair.output);
+      const labels = getNiceLabels(pair.min, pair.max, pair.ticks);
+      expect(labels).toEqual(pair.output);
     });
-    // console.log(bucket([-0.1, -0.009]));
+  });
+  it('Generates Valid Labels', () => {
+    const valuePairs = Array.from({ length: 100 }, () => {
+      return {
+        min: Math.random() * 200 - 100,
+        max: Math.random() * 200 - 100,
+      };
+    });
+
+    valuePairs.forEach(pair => {
+      [4, 8, 12].forEach(tick => {
+        const localMin = Math.min(pair.min, pair.max);
+        const localMax = Math.max(pair.min, pair.max);
+        const labels = getNiceLabels(localMin, localMax, tick);
+        expect(localMin).toBeGreaterThanOrEqual(Math.min(...labels));
+        expect(localMax).toBeLessThanOrEqual(Math.max(...labels));
+        expect(labels.length).toBeLessThanOrEqual(tick + tick / 2);
+        expect(labels.length).toBeGreaterThanOrEqual(2);
+      });
+    });
   });
 });
