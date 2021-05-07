@@ -17,6 +17,7 @@ const baseConfig: ChartConfig = {
   barConfig: {
     spaceRatio: 0.5,
   },
+  maxWidth: null,
 };
 
 export default baseConfig;
