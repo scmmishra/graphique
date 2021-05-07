@@ -12,8 +12,9 @@ export function getNiceLabels(
   max: number,
   ticks: number
 ): number[] {
-  if (min === 0 && max === 0)
+  if (min === 0 && max === 0) {
     return Array.from({ length: ticks }, (_, index) => index + 1);
+  }
 
   const labels = [];
   const range = getNiceNumber(max - min, false);
@@ -41,14 +42,24 @@ export function getNiceNumber(canidate: number, round: boolean): number {
   const niceFraction = canidate / multiplicationFactor;
 
   if (round) {
-    if (niceFraction < 1.5) return multiplicationFactor;
-    else if (niceFraction < 3) return 2 * multiplicationFactor;
-    else if (niceFraction < 7) return 5 * multiplicationFactor;
-    else return 10 * multiplicationFactor;
+    if (niceFraction < 1.5) {
+      return multiplicationFactor;
+    } else if (niceFraction < 3) {
+      return 2 * multiplicationFactor;
+    } else if (niceFraction < 7) {
+      return 5 * multiplicationFactor;
+    } else {
+      return 10 * multiplicationFactor;
+    }
   } else {
-    if (niceFraction <= 1) return multiplicationFactor;
-    else if (niceFraction <= 2) return 2 * multiplicationFactor;
-    else if (niceFraction <= 5) return 5 * multiplicationFactor;
-    else return 10 * multiplicationFactor;
+    if (niceFraction <= 1) {
+      return multiplicationFactor;
+    } else if (niceFraction <= 2) {
+      return 2 * multiplicationFactor;
+    } else if (niceFraction <= 5) {
+      return 5 * multiplicationFactor;
+    } else {
+      return 10 * multiplicationFactor;
+    }
   }
 }
