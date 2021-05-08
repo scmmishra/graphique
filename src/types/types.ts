@@ -12,7 +12,6 @@ export interface DataSetItem {
   values: number[];
   name: string;
   color: string;
-  type: ChartTypes;
 }
 
 export interface ChartData {
@@ -45,13 +44,28 @@ export interface BarConfig {
   spaceRatio?: number;
 }
 
-export interface ChartConfig {
-  showLegend: Maybe<boolean>;
-  showTooltip: Maybe<boolean>;
-  showXAxis: Maybe<boolean>;
-  showYAxis: Maybe<boolean>;
-  animate: Maybe<boolean>;
-  maxWidth: Maybe<number>;
+export interface ChartOptions {
+  showLegend?: Maybe<boolean>;
+  showTooltip?: Maybe<boolean>;
+  showXAxis?: Maybe<boolean>;
+  showYAxis?: Maybe<boolean>;
+  animate?: Maybe<boolean>;
+  maxWidth?: Maybe<number>;
   lineConfig?: LineConfig;
   barConfig?: BarConfig;
+}
+
+export interface ChartConfig {
+  type: ChartTypes;
+  data: ChartData;
+  options: ChartOptions;
+}
+
+export interface Geometry {
+  containerWidth: number;
+  containerHeight: number;
+  width: number;
+  height: number;
+  xOffset: number;
+  yOffset: number;
 }

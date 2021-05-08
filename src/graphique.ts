@@ -1,5 +1,13 @@
 // types
-import { ChartData, ChartConfig, LineConfig, BarConfig } from './types/types';
+import {
+  ChartData,
+  ChartConfig,
+  LineConfig,
+  BarConfig,
+  Geometry,
+  ChartOptions,
+  ChartTypes,
+} from './types/types';
 
 // helpers
 import { COLORS } from './helpers/constants';
@@ -14,19 +22,21 @@ import { createSVG } from './utils/svg';
 
 export default class Graphique {
   parent: HTMLElement;
+  options: ChartOptions;
+  type: ChartTypes;
   data: ChartData;
-  config: ChartConfig;
   lineConfig: LineConfig;
   barConfig: BarConfig;
-  geometry: any;
+  geometry: Geometry;
 
-  constructor(parent: HTMLElement, data: ChartData, config: ChartConfig) {
+  constructor(parent: HTMLElement, config: ChartConfig) {
     this.parent = parent;
-    this.config = Object.assign(baseConfig, config);
-    this.lineConfig = this.config.lineConfig as LineConfig;
-    this.barConfig = this.config.barConfig as BarConfig;
+    this.type = config.type;
+    this.options = Object.assign(baseConfig, config.options);
+    this.lineConfig = this.options?.lineConfig as LineConfig;
+    this.barConfig = this.options?.barConfig as BarConfig;
 
-    this.data = this.validateData(data);
+    this.data = this.validateData(config.data);
     this.geometry = this.buildMeasures();
 
     this.paint();
@@ -49,13 +59,19 @@ export default class Graphique {
     return data;
   }
 
-  buildMeasures() {
+  buildMeasures(): Geometry {
     const rect = this.parent.getBoundingClientRect();
 
     let width;
-    if (this.config.maxWidth && Number.isSafeInteger(this.config.maxWidth)) {
+
+    if (
+      this.options?.maxWidth &&
+      Number.isSafeInteger(this.options?.maxWidth)
+    ) {
       width =
-        rect.width > this.config.maxWidth ? this.config.maxWidth : rect.width;
+        rect.width > this.options?.maxWidth
+          ? this.options?.maxWidth
+          : rect.width;
     } else {
       width = rect.width;
     }
