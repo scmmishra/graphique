@@ -95,16 +95,18 @@ export default class Graphique {
       height: this.geometry.height,
     });
 
-    [11, 12, 13].forEach((a, index) => {
-      svgContainer.appendChild(
-        createSVG('rect', {
-          x: index * 100,
-          y: this.geometry.yOffset - 100 * (a / 15),
-          width: 80,
-          height: 100 * (a / 15),
-          fill: generateColor('bebo'),
-        })
-      );
+    this.data.datasets.forEach(dataSetItem => {
+      dataSetItem.values.forEach((val, index) => {
+        svgContainer.appendChild(
+          createSVG('rect', {
+            x: index * 100,
+            y: this.geometry.yOffset - 100 * (val / 15),
+            width: 80,
+            height: 100 * (val / 15),
+            fill: dataSetItem.color,
+          })
+        );
+      });
     });
     this.parent.append(svgContainer);
   }
