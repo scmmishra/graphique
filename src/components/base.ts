@@ -7,10 +7,10 @@ export default class Base {
     this.setup();
     this.render();
   }
-  setup() {}
-  refresh() {}
-  render() {}
-  update() {}
-  makeElement() {}
-  animateElement() {}
+  setup(): void {}
+  refresh(): void {}
+  render(): void {}
+  update(): void {}
+  makeElement(): void {}
+  animateElement(): void {}
 }
